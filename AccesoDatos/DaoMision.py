@@ -6,7 +6,7 @@ class DaoMision:
 
     def guardarMision(self, mision):
         sql_guardar = "INSERT INTO mision (nombre, elevacion, velocidad, modo_vuelo, modo_adq, usuarios_id) VALUES "
-        sql_guardar += "(%s, %s, %s, %s, %s, %s) RETURNING *"
+        sql_guardar += "('%s', %s, %s, '%s', '%s', %s) RETURNING *"
 
         try:
             cursor = self.conexion.cursor()
