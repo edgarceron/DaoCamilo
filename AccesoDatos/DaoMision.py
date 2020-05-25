@@ -6,13 +6,17 @@ class DaoMision:
 
     def guardarMision(self, mision):
         sql_guardar = "INSERT INTO mision (nombre, elevacion, velocidad, modo_vuelo, modo_adq, usuarios_id) VALUES "
-        sql_guardar += "('" + mision.nombre + "', " + str(mision.elevacion) + ", " + str(mision.velocidad) + ", '" 
-        sql_guardar +=  mision.modo_vuelo + "','" + mision.modo_adq + "', "
-        sql_guardar += str(mision.usuarios_id) + ") RETURNING *"
+        sql_guardar += "(%s, %s, %s, %s, %s, %s) RETURNING *"
 
         try:
             cursor = self.conexion.cursor()
-            cursor.execute(sql_guardar)
+            cursor.execute(
+                sql_guardar, 
+                (
+                    mision.nombre, mision.elevacion, mision.velocidad,
+                    mision.modo_vuelo, mision.modo_adq, mision.usuarios_id
+                )
+            )
             result = cursor.fetchone()
             self.conexion.commit()
             cursor.close()
