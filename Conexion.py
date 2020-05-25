@@ -7,7 +7,7 @@ def conexion():
             port = 5432, 
             database="geospectre", 
             user="postgres", 
-            password="firadankana")
+            password="kmiikiintero050K")
 
         return connection
     

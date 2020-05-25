@@ -6,7 +6,7 @@ class DaoUsuarios:
 
 	def guardarUsuario(self, usuario):
 		sql_guardar = "INSERT INTO usuarios (nombre, contrasena) VALUES "
-		sql_guardar += "(\'" + usuario.nombre + "\', \'" + usuario.contrasena + "\');"
+		sql_guardar += "(\'" + usuario.nombre + "\', \'" + usuario.contrasena + "\') "
 		sql_guardar += " RETURNING *"
 		
 		try:
@@ -60,6 +60,49 @@ class DaoUsuarios:
 		try:
 			cursor = self.conexion.cursor()
 			cursor.execute(sql_select)
+			record = cursor.fetchone()
+			result = Usuarios.Usuarios()
+			result.id = record[0]
+			result.nombre = record[1]
+			result.contrasena = record[2]
+			return result
+
+		except(Exception) as e:
+			print("Error al actualizar el usuario", e)
+			result = None
+		
+		finally:
+			if(cursor):
+				cursor.close()
+				print("Se ha cerrado el cursor")
+			return result
+	def getUsuarioLogin(self, nombre, contrasena):
+		sql_select = "SELECT * FROM usuarios WHERE nombre = %s AND contrasena = %s" 
+		try:
+			cursor = self.conexion.cursor()
+			cursor.execute(sql_select, (nombre, contrasena))
+			record = cursor.fetchone()
+			result = Usuarios.Usuarios()
+			result.id = record[0]
+			result.nombre = record[1]
+			result.contrasena = record[2]
+			return result
+
+		except(Exception) as e:
+			print("Error al actualizar el usuario", e)
+			result = None
+		
+		finally:
+			if(cursor):
+				cursor.close()
+				print("Se ha cerrado el cursor")
+			return result
+
+	def getUsuarioNombre(self, nombre):
+		sql_select = "SELECT * FROM usuarios WHERE nombre = %s" 
+		try:
+			cursor = self.conexion.cursor()
+			cursor.execute(sql_select, (nombre))
 			record = cursor.fetchone()
 			result = Usuarios.Usuarios()
 			result.id = record[0]
