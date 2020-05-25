@@ -5,14 +5,18 @@ class DaoEspectros:
         self.conexion = conexion
 
     def guardarEspectros(self, espectros):
-        sql_guardar = "INSERT INTO espectros (nombre, elevacion, velocidad, modo_vuelo, modo_adq, usuarios_id) VALUES "
-        sql_guardar += "('" + espectros.nombre + "', " + str(espectros.elevacion) + ", " + str(espectros.velocidad) + ", '" 
-        sql_guardar +=  espectros.modo_vuelo + "','" + espectros.modo_adq + "', "
-        sql_guardar += str(espectros.usuarios_id) + ") RETURNING *"
+        sql_guardar = "INSERT INTO espectros (white, dark, capturado, resultado, sensores_id) VALUES "
+        sql_guardar += "(%s, %s, %s, %s, %s) RETURNING *"
 
         try:
             cursor = self.conexion.cursor()
-            cursor.execute(sql_guardar)
+            cursor.execute(
+                sql_guardar, 
+                (
+                    espectros.white, espectros.dark, espectros.capturado, 
+                    espectros.resultado,espectros.sensores_id 
+                ) 
+            )
             result = cursor.fetchone()
             self.conexion.commit()
             cursor.close()
@@ -25,17 +29,22 @@ class DaoEspectros:
 
 
     def actualizarEspectros(self, espectros):
-        sql_guardar = "UPDATE espectros SET" 
-        sql_guardar += " nombre = '" + espectros.nombre + "', elevacion = " + str(espectros.elevacion) 
-        sql_guardar += ", velocidad = " + str(espectros.velocidad) 
-        sql_guardar += ", modo_vuelo = '" + espectros.modo_vuelo + "', modo_adq = '" + espectros.modo_adq + "', "
-        sql_guardar += "usuarios_id = " + str(espectros.usuarios_id) + " WHERE id = " + str(espectros.id)
-        sql_guardar += " RETURNING *"
-        
+        sql_guardar = "UPDATE espectros SET"
+        sql_guardar += "white = %s, dark = %s, capturado = %s, resultado = %s, "
+        sql_guardar += "sensores_id = %s"
+
         try:
             cursor = self.conexion.cursor()
-            cursor.execute(sql_guardar)
-            result = cursor.fetchone()
+            cursor.execute(
+                sql_guardar,
+                (
+                    espectros.white,
+                    espectros.dark,
+                    espectros.capturado,
+                    espectros.resultado,
+                    espectros.sensores_id
+                )
+            )
             self.conexion.commit()
             cursor.close()
             return espectros
@@ -68,12 +77,10 @@ class DaoEspectros:
             record = cursor.fetchone()
             result = Espectros()
             result.id = record[0]
-            result.nombre = record[1]
-            result.elevacion = record[2]
-            result.velocidad = record[3]
-            result.modo_vuelo = record[4]
-            result.modo_adq = record[5]
-            result.usuarios_id = record[6]
+            result.white = record[1]
+            result.capturado = record[2]
+            result.resultado = record[3]
+            result.sensores_id = record[4]
             return result
 
         except(Exception) as e:
