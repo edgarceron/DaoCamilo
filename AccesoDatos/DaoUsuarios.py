@@ -99,15 +99,17 @@ class DaoUsuarios:
 			return result
 
 	def getUsuarioNombre(self, nombre):
-		sql_select = "SELECT * FROM usuarios WHERE nombre = %s" 
+		sql_select = "SELECT id FROM usuarios WHERE nombre = '"+nombre+"'" 
+		# print(sql_select)
 		try:
 			cursor = self.conexion.cursor()
-			cursor.execute(sql_select, (nombre))
+			cursor.execute(sql_select)
 			record = cursor.fetchone()
 			result = Usuarios.Usuarios()
+			# print(record)
 			result.id = record[0]
-			result.nombre = record[1]
-			result.contrasena = record[2]
+			# result.nombre = record[1]
+			# result.contrasena = record[2]
 			return result
 
 		except(Exception) as e:

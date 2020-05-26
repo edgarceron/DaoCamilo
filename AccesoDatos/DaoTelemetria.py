@@ -6,13 +6,13 @@ class DaoTelemetria:
 
     def guardarTelemetria(self, telemetria):
         sql_guardar = "INSERT INTO telemetria (pitch, yaw, roll, lat, lon, alt, "
-        sql_guardar = "bateriaDron, VelocidadDron, mision_id) VALUES "
+        sql_guardar += "bateriaDron, VelocidadDron, mision_id) VALUES "
         sql_guardar += "(" + str(telemetria.pitch) + ", " + str(telemetria.yaw) + ", "
         sql_guardar += str(telemetria.roll) + ", " + str(telemetria.lat) + ", " 
         sql_guardar += str(telemetria.lon) + "," + str(telemetria.alt) + ", "
-        sql_guardar += str(telemetria.bateriaDron) + ",'" + telemetria.velodicidadDron + "', "
+        sql_guardar += str(telemetria.bateriaDron) + ",'" + telemetria.velocidadDron + "', "
         sql_guardar += str(telemetria.mision_id) + ") RETURNING *"
-
+        
         try:
             cursor = self.conexion.cursor()
             cursor.execute(sql_guardar)
@@ -20,6 +20,7 @@ class DaoTelemetria:
             self.conexion.commit()
             cursor.close()
             telemetria.id = result[0]
+            print("Registro guardado exitosamente")
             return telemetria
             
         except(Exception) as e:

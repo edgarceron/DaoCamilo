@@ -17,6 +17,7 @@ class DaoSensores:
             self.conexion.commit()
             cursor.close()
             sensores.id = result[0]
+            print(result)
             return sensores
             
         except(Exception) as e:

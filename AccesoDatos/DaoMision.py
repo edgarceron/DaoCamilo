@@ -6,7 +6,7 @@ class DaoMision:
 
     def guardarMision(self, mision):
         sql_guardar = "INSERT INTO mision (nombre, elevacion, velocidad, modo_vuelo, modo_adq, usuarios_id) VALUES "
-        sql_guardar += "('%s', %s, %s, '%s', '%s', %s) RETURNING *"
+        sql_guardar += "(%s, %s, %s, %s, %s, %s) RETURNING *"
 
         try:
             cursor = self.conexion.cursor()
@@ -81,7 +81,33 @@ class DaoMision:
             return result
 
         except(Exception) as e:
-            print("Error al actualizar el usuario", e)
+            print("Error al actualizar la mision", e)
+            result = None
+        
+        finally:
+            if(cursor):
+                cursor.close()
+                print("Se ha cerrado el cursor")
+            return result
+    def getMisionNombre(self, nombreMision):
+        sql_select = "SELECT * FROM mision WHERE nombre = '" + nombreMision + "'"
+        try:
+            cursor = self.conexion.cursor()
+            cursor.execute(sql_select)
+            record = cursor.fetchone()
+            result = Mision()
+            result.id = record[0]
+            result.nombre = record[1]
+            result.elevacion = record[2]
+            result.velocidad = record[3]
+            result.modo_vuelo = record[4]
+            result.modo_adq = record[5]
+            result.usuarios_id = record[6]
+            print(result.id)
+            return result
+
+        except(Exception) as e:
+            print("Error al actualizar la mision", e)
             result = None
         
         finally:
